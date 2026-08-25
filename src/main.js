@@ -36,6 +36,7 @@ renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.NeutralToneMapping;
 renderer.toneMappingExposure = 0.2;
+scene.environmentIntensity = 0.28;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.shadowMap.autoUpdate = false;
@@ -45,10 +46,11 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.07;
 controls.screenSpacePanning = true;
 
-const keyLight = new THREE.DirectionalLight(0xfff4e4, 2.4);
+const keyLight = new THREE.DirectionalLight(0xfff4e4, 6);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.set(2048, 2048);
-keyLight.shadow.radius = 6;
+keyLight.shadow.intensity = 1;
+keyLight.shadow.radius = 4.5;
 keyLight.shadow.bias = -0.00025;
 keyLight.shadow.blurSamples = 12;
 scene.add(keyLight, keyLight.target);
@@ -90,11 +92,11 @@ function updateLightPosition() {
   if (!modelBounds) return;
 
   const { center, maxDimension } = modelBounds;
-  const horizontalDistance = maxDimension * 1.8;
+  const horizontalDistance = maxDimension * 2.2;
 
   keyLight.position.set(
     center.x + Math.cos(lightDirectionRadians) * horizontalDistance,
-    center.y + maxDimension * 2.2,
+    center.y + maxDimension * 1.55,
     center.z + Math.sin(lightDirectionRadians) * horizontalDistance,
   );
   keyLight.target.position.copy(center);
@@ -134,7 +136,7 @@ function configureShadow(box, center, size, maxDimension) {
   const floorGeometry = new THREE.PlaneGeometry(floorSize, floorSize);
   const floorMaterial = new THREE.ShadowMaterial({
     color: 0x000000,
-    opacity: 0.48,
+    opacity: 0.86,
     transparent: true,
     depthWrite: false,
   });
@@ -199,6 +201,18 @@ function prepareModel(loadedModel) {
     if (!object.isMesh) return;
     object.castShadow = true;
     object.receiveShadow = true;
+
+    const materials = Array.isArray(object.material) ? object.material : [object.material];
+    materials.forEach((material) => {
+      // Vectorworks/Blender exports can use fully emissive decals. Keeping a
+      // small amount preserves their texture while allowing them to darken.
+      if (material.emissive) material.emissiveIntensity = 0.08;
+
+      // Architectural exports often contain thin, double-sided geometry.
+      // Casting from both sides keeps walls, roofs, and foliage in the map.
+      material.shadowSide = THREE.DoubleSide;
+      material.needsUpdate = true;
+    });
   });
 
   const box = new THREE.Box3().setFromObject(model);

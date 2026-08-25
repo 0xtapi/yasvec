@@ -38,6 +38,8 @@ of `0.20` are the defaults. Visitors can use the **Lighting** panel to adjust br
 or switch tone-mapping methods. The light-direction slider rotates the HDR studio light
 and a matching directional light around the stationary model. That light casts soft
 self-shadows and a soft shadow onto the invisible ground plane beneath the model.
+The app reduces emissive material strength on import and balances the Studio environment
+against a stronger key light so object-to-object shadows remain clearly visible.
 
 The environment is Poly Haven's
 [Studio Small 03](https://polyhaven.com/a/studio_small_03) by Greg Zaal, released under
