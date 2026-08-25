@@ -41,6 +41,9 @@ self-shadows and a soft shadow onto the invisible ground plane beneath the model
 The app reduces emissive material strength on import and balances the Studio environment
 against a stronger key light so object-to-object shadows remain clearly visible.
 
+The exported letter and number pin graphics are detected by their material names and
+billboarded toward the active camera, so they remain legible while visitors orbit the model.
+
 The environment is Poly Haven's
 [Studio Small 03](https://polyhaven.com/a/studio_small_03) by Greg Zaal, released under
 CC0. Asset provenance is recorded in `public/environments/README.md`.

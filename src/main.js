@@ -58,6 +58,33 @@ scene.add(keyLight, keyLight.target);
 let model;
 let modelBounds;
 let lightDirectionRadians = 0;
+const billboardLabels = [];
+const billboardAxisCorrection = new THREE.Quaternion().setFromAxisAngle(
+  new THREE.Vector3(1, 0, 0),
+  Math.PI / 2,
+);
+
+function isPinLabelMaterial(material) {
+  return /^(letter|number)_/i.test(material?.name ?? '');
+}
+
+function findBillboardRoot(object) {
+  let current = object;
+
+  while (current && current !== model) {
+    if (/^Bildobjekt(?:_\d+)?$/.test(current.name)) return current;
+    current = current.parent;
+  }
+
+  return null;
+}
+
+function updateBillboardLabels() {
+  billboardLabels.forEach((label) => {
+    label.lookAt(camera.position);
+    label.quaternion.multiply(billboardAxisCorrection);
+  });
+}
 
 function showError(message) {
   errorMessage.textContent = message;
@@ -203,6 +230,20 @@ function prepareModel(loadedModel) {
     object.receiveShadow = true;
 
     const materials = Array.isArray(object.material) ? object.material : [object.material];
+    const isPinLabel = materials.some(isPinLabelMaterial);
+
+    if (isPinLabel) {
+      const billboardRoot = findBillboardRoot(object);
+      if (billboardRoot && !billboardLabels.includes(billboardRoot)) {
+        billboardLabels.push(billboardRoot);
+      }
+
+      // The pin graphics are transparent planes; excluding them avoids
+      // rectangular artifacts in the directional shadow map as they rotate.
+      object.castShadow = false;
+      object.receiveShadow = false;
+    }
+
     materials.forEach((material) => {
       // Vectorworks/Blender exports can use fully emissive decals. Keeping a
       // small amount preserves their texture while allowing them to darken.
@@ -221,6 +262,7 @@ function prepareModel(loadedModel) {
   const maxDimension = Math.max(size.x, size.y, size.z, 0.001);
 
   modelBounds = { box, center, size, maxDimension };
+  updateBillboardLabels();
   configureShadow(box, center, size, maxDimension);
   frameModel(box, center, maxDimension);
   updateLightPosition();
@@ -281,6 +323,7 @@ function resizeRenderer() {
 
 function render() {
   controls.update();
+  updateBillboardLabels();
   renderer.render(scene, camera);
   requestAnimationFrame(render);
 }
@@ -327,7 +370,7 @@ new ResizeObserver(resizeRenderer).observe(viewerWrap);
 viewerWrap.dataset.backdrop = 'dark';
 toneMappingControl.value = 'neutral';
 setExposure(0.2);
-setLightDirection(0);
+setLightDirection(30);
 resizeRenderer();
 loadEnvironment();
 loadModel();
