@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "vite --force",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "model:roof-tiles": "node scripts/apply-roof-tiles.mjs"
   },
   "dependencies": {
     "three": "^0.183.2"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.4.2",
+    "@gltf-transform/extensions": "^4.4.2",
     "vite": "^8.2.2"
   }
 }

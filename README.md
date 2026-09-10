@@ -30,6 +30,31 @@ public/models/model.glb
 The app opens that file immediately. This is the model visitors will see after the site
 is built and hosted.
 
+## Experiment with a model copy
+
+The original public model remains at `public/models/model.glb`. An exact working copy is
+stored at `public/models/model-experiment.glb`.
+
+- Open the normal URL to view the untouched original: `/`
+- Add `?model=experiment` to view the working copy: `/?model=experiment`
+
+For example, locally use <http://localhost:5173/?model=experiment>. Only modify
+`model-experiment.glb` when testing model-level changes. The selection is deliberately
+limited to these two known files, so arbitrary file paths cannot be passed in the URL.
+
+### Rebuild the tiled-roof experiment
+
+The experimental model has a generated terracotta roof-tile material embedded directly
+in its GLB. To rebuild it from the untouched original, run:
+
+```bash
+npm run model:roof-tiles
+```
+
+This reads `public/models/model.glb`, applies
+`assets/textures/roof-tiles-terracotta.png` only to the detected roof faces, and replaces
+`public/models/model-experiment.glb`. It never writes to the original model.
+
 ## Lighting
 
 The viewer uses a bundled CC0 Studio HDR environment to create directional light and
@@ -79,4 +104,7 @@ index.html                  Page markup
 src/main.js                 Three.js viewer, lighting, shadows, and controls
 src/styles.css              Site design
 public/models/model.glb     Your public model (add this file)
+public/models/model-experiment.glb  Editable copy selected with ?model=experiment
+assets/textures/roof-tiles-terracotta.png  Source texture for the roof experiment
+scripts/apply-roof-tiles.mjs  Rebuilds the experimental GLB from the original
 ```

@@ -20,7 +20,9 @@ const lightDirectionControl = document.querySelector('#light-direction-control')
 const lightDirectionValue = document.querySelector('#light-direction-value');
 
 const studioEnvironmentUrl = `${import.meta.env.BASE_URL}environments/studio_small_03_1k.hdr`;
-const defaultModelUrl = `${import.meta.env.BASE_URL}models/model.glb`;
+const requestedModel = new URLSearchParams(window.location.search).get('model');
+const modelFilename = requestedModel === 'experiment' ? 'model-experiment.glb' : 'model.glb';
+const defaultModelUrl = `${import.meta.env.BASE_URL}models/${modelFilename}`;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 1000);
