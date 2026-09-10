@@ -1,9 +1,7 @@
-# Vectorapp – übersetzte Prompts und Antworten
+# Vectorapp
 
-Diese Dokumentation enthält die übersetzten Nutzer-Prompts und die jeweiligen
-abschließenden Antworten bis einschließlich der Änderung der standardmäßigen
-Lichtrichtung auf 30°. Technische Befehle, Dateipfade, URLs und Code-Beispiele
-bleiben unverändert.
+Diese Dokumentation enthält die Nutzer-Prompts und die jeweiligen
+abschließenden Antworten.
 
 ## 1. Dateiformat und technische Grundlage
 
@@ -239,7 +237,7 @@ Eine erste Verbesserung auf App-Seite könnte etwa so aussehen:
   exposure="1.05"
   shadow-intensity="1.4"
   shadow-softness="0.5"
->
+></model-viewer>
 ```
 
 Die HDR-Umgebung ist dabei der wichtigste Teil; Belichtung und Schatten sind
@@ -271,7 +269,6 @@ Alle sicheren appseitigen Beleuchtungsverbesserungen wurden umgesetzt:
 - Belichtung und Kontaktschatten wurden abgestimmt.
 - Ein kontrastierender, hellgrauer Hintergrund wurde hinzugefügt.
 - Ein **Beleuchtungs**-Panel wurde ergänzt mit:
-
   - Studio- oder neutraler Umgebung,
   - AgX, ACES oder Neutral als Tone Mapping,
   - Helligkeitsregelung,
